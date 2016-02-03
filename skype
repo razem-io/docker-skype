@@ -1,0 +1,36 @@
+#!/bin/bash
+set -e
+
+GROUP=$(id -g -n $USER)
+HOMEDIR=/home/$USER/.Skype
+
+if [ ! -d "$HOMEDIR" ]; then
+	echo "Creating Skype home directory..."
+	mkdir $HOMEDIR
+	chown $USER:$GROUP $HOMEDIR 
+fi
+
+OUTPUT_DOC=$(docker ps -a -f name=skype -q)
+
+if [ -n "$OUTPUT_DOC" ]; then
+	echo "Skype already running. Restarting instead."
+	docker restart skype
+else
+	echo "Starting Skype..."
+	USER_UID=$(id -u)
+	USER_GID=$(id -g)
+
+	
+
+	xhost +local: && \
+	docker run -it --rm \
+		--env=USER_UID=$USER_UID \
+		--env=USER_GID=$USER_GID \
+		--env=DISPLAY=unix$DISPLAY \
+		--volume=/tmp/.X11-unix:/tmp/.X11-unix:ro \
+		--volume=/run/user/$USER_UID/pulse:/run/pulse:ro \
+		--volume=/dev/video0:/dev/video0:rw \
+		--volume=/home/$USER/.Skype:/tmp/Skype:rw \
+		--name skype \
+		razemio/skype
+fi
