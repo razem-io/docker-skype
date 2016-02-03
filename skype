@@ -32,5 +32,5 @@ else
 		--volume=/dev/video0:/dev/video0:rw \
 		--volume=/home/$USER/.Skype:/tmp/Skype:rw \
 		--name skype \
-		razemio/docker-skype
+		razemio/skype
 fi
