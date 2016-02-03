@@ -20,6 +20,7 @@ RUN dpkg --add-architecture i386 \
 		libxss1:i386 \
 		libxv1:i386 \
 		libssl1.0.0:i386 \
+		xdg-utils \
 	&& curl -Lo skype.deb http://www.skype.com/go/getskype-linux-deb-32 \
 	&& apt-get purge -y --auto-remove curl \
 	&& { dpkg -i skype.deb || true; } \
